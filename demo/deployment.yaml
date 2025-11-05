@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exo
+  namespace: exo
+  labels:
+    app: exo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exo
+  template:
+    metadata:
+      labels:
+        app: exo
+    spec:
+      containers:
+        - name: exo
+          image: ghcr.io/ianrelecker/exo:cpu
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 52415
+          env:
+            - name: EXO_HOME
+              value: /data
+            - name: CLANG
+              value: "1"
+          volumeMounts:
+            - name: exo-data
+              mountPath: /data
+            - name: exo-cache
+              mountPath: /home/exo/.cache/exo
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            runAsNonRoot: true
+            runAsUser: 10001
+      volumes:
+        - name: exo-data
+          emptyDir: {}
+        - name: exo-cache
+          emptyDir: {}

@@ -1,0 +1,12 @@
+# Python caches
+__pycache__/
+*.pyc
+
+# macOS finder cruft
+.DS_Store
+
+# Docker build output
+docker/.env
+
+# Kustomize build artifacts
+*.tmp.yaml

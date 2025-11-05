@@ -1,0 +1,42 @@
+- op: add
+  path: /spec/template/spec/containers/-
+  value:
+    name: tailscale
+    image: tailscale/tailscale:stable
+    args:
+      - --state=k8s
+      - up
+      - --accept-dns=false
+      - --hostname=exo-$(NODE_NAME)
+    env:
+      - name: TS_AUTHKEY
+        valueFrom:
+          secretKeyRef:
+            name: ts-auth
+            key: TS_AUTHKEY
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            fieldPath: spec.nodeName
+    securityContext:
+      capabilities:
+        add:
+          - NET_ADMIN
+          - NET_RAW
+    volumeMounts:
+      - name: ts-run
+        mountPath: /var/run/tailscale
+      - name: ts-tun
+        mountPath: /dev/net/tun
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: ts-run
+    emptyDir: {}
+- op: add
+  path: /spec/template/spec/volumes/-
+  value:
+    name: ts-tun
+    hostPath:
+      path: /dev/net/tun
+      type: CharDevice

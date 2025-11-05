@@ -1,0 +1,33 @@
+FROM python:3.12-slim
+
+# Build deps for tinygrad CPU (clang), plus git for pip -e .
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    clang \
+    git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Add a nonroot user
+RUN useradd -m -u 10001 exo
+USER exo
+WORKDIR /home/exo
+
+# Grab EXO source and install
+RUN git clone https://github.com/exo-explore/exo.git && \
+    cd exo && \
+    pip install --no-cache-dir -e .
+
+# Model cache + runtime home
+ENV EXO_HOME=/data \
+    EXO_CACHE=/data/.cache/exo \
+    CLANG=1
+
+# Port per README
+EXPOSE 52415
+
+# Data dir for models (we'll mount it)
+USER root
+RUN mkdir -p /data && chown -R exo:exo /data
+USER exo
+
+ENTRYPOINT ["exo"]

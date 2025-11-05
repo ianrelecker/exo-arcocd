@@ -1,0 +1,30 @@
+FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04
+
+# Python & build deps
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 \
+    python3-venv \
+    python3-pip \
+    git \
+    build-essential && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m -u 10001 exo
+USER exo
+WORKDIR /home/exo
+
+RUN git clone https://github.com/exo-explore/exo.git && \
+    cd exo && \
+    pip3 install --no-cache-dir -e .
+
+ENV EXO_HOME=/data \
+    EXO_CACHE=/data/.cache/exo \
+    CUDA=1
+
+EXPOSE 52415
+
+USER root
+RUN mkdir -p /data && chown -R exo:exo /data && usermod -aG video exo
+USER exo
+
+ENTRYPOINT ["exo"]
