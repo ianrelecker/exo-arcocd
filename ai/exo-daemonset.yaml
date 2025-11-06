@@ -14,6 +14,22 @@ spec:
       labels:
         app: exo
     spec:
+      initContainers:
+        - name: init-permissions
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - >
+              mkdir -p /home/exo/.cache/exo &&
+              chown -R 10001:10001 /data /home/exo/.cache/exo
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: exo-data
+              mountPath: /data
+            - name: exo-cache
+              mountPath: /home/exo/.cache/exo
       terminationGracePeriodSeconds: 10
       containers:
         - name: exo
