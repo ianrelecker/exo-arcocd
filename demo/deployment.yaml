@@ -19,6 +19,9 @@ spec:
         - name: exo
           image: ghcr.io/ianrelecker/exo:cpu
           imagePullPolicy: IfNotPresent
+          command:
+            - /usr/bin/env
+            - exo
           ports:
             - name: http
               containerPort: 52415

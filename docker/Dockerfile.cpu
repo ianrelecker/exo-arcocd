@@ -19,8 +19,9 @@ RUN git clone https://github.com/exo-explore/exo.git /home/exo/exo && \
 # Model cache + runtime home
 ENV EXO_HOME=/data \
     EXO_CACHE=/data/.cache/exo \
-    CLANG=1 \
-    PATH=/home/exo/.local/bin:$PATH
+    CLANG=1
+
+ENV PATH="/home/exo/.local/bin:${PATH}"
 
 # Port per README
 EXPOSE 52415

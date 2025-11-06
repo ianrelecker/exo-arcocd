@@ -52,6 +52,8 @@ kubectl apply -k ai-tailscale  # Adds Tailscale sidecar (requires ts-auth secret
 kubectl apply -k demo          # Single-pod deployment for quick tests
 ```
 
+The workload invokes `exo` via `/usr/bin/env`, so whichever image you deploy just needs the CLI on the `PATH`. If you relocate the binary, update the container command in the manifests.
+
 Create the Tailscale secret before using the overlay:
 
 ```bash
