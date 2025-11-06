@@ -25,7 +25,9 @@ ENV EXO_HOME=/data \
 EXPOSE 52415
 
 USER root
-RUN mkdir -p /data && chown -R exo:exo /data && usermod -aG video exo
+RUN ln -s /home/exo/.local/bin/exo /usr/local/bin/exo && \
+    mkdir -p /data && chown -R exo:exo /data && \
+    usermod -aG video exo
 USER exo
 
 ENTRYPOINT ["exo"]

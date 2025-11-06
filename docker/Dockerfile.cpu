@@ -28,7 +28,8 @@ EXPOSE 52415
 
 # Data dir for models (we'll mount it)
 USER root
-RUN mkdir -p /data && chown -R exo:exo /data
+RUN ln -s /home/exo/.local/bin/exo /usr/local/bin/exo && \
+    mkdir -p /data && chown -R exo:exo /data
 USER exo
 
 ENTRYPOINT ["exo"]
