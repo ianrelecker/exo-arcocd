@@ -27,6 +27,15 @@ docker push ghcr.io/ianrelecker/exo:nvidia
 
 Both images create a non-root `exo` user (UID 10001), clone the upstream source, and install it with `pip install -e .`. Runtime data lives at `/data`; the DaemonSet mounts host paths so downloaded models stay cached per node.
 
+### Automated builds
+
+This repository includes a GitHub Actions workflow (`.github/workflows/build-images.yaml`) that rebuilds both images and publishes them to GHCR whenever the `main` branch changes. It pushes two tags per build:
+
+- `ghcr.io/ianrelecker/exo:cpu` and `:nvidia` (rolling tags you reference from Kubernetes)
+- `ghcr.io/ianrelecker/exo:cpu-${GITHUB_SHA}` and `:nvidia-${GITHUB_SHA}` (immutable digests you can pin to)
+
+You can also trigger the workflow manually from the Actions tab. If you fork this repository under a different account, no changes are required—the workflow automatically uses `github.repository_owner` for the GHCR namespace.
+
 ## Deploying with Kustomize
 
 Apply the base package directly:
