@@ -34,7 +34,7 @@ spec:
       containers:
         - name: exo
           image: ghcr.io/ianrelecker/exo:cpu
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           command:
             - /usr/bin/env
             - exo
