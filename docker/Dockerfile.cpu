@@ -9,13 +9,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # Add a nonroot user
 RUN useradd -m -u 10001 exo
-USER exo
 WORKDIR /home/exo
 
 # Grab EXO source and install
-RUN git clone https://github.com/exo-explore/exo.git && \
-    cd exo && \
-    pip install --no-cache-dir -e .
+RUN git clone https://github.com/exo-explore/exo.git /home/exo/exo && \
+    python -m pip install --no-cache-dir -e /home/exo/exo && \
+    chown -R exo:exo /home/exo
 
 # Model cache + runtime home
 ENV EXO_HOME=/data \
@@ -28,8 +27,7 @@ EXPOSE 52415
 
 # Data dir for models (we'll mount it)
 USER root
-RUN ln -s /home/exo/.local/bin/exo /usr/local/bin/exo && \
-    mkdir -p /data && chown -R exo:exo /data
+RUN mkdir -p /data && chown -R exo:exo /data
 USER exo
 
 ENTRYPOINT ["exo"]

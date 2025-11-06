@@ -10,12 +10,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     rm -rf /var/lib/apt/lists/*
 
 RUN useradd -m -u 10001 exo
-USER exo
 WORKDIR /home/exo
 
-RUN git clone https://github.com/exo-explore/exo.git && \
-    cd exo && \
-    pip3 install --no-cache-dir -e .
+RUN git clone https://github.com/exo-explore/exo.git /home/exo/exo && \
+    python3 -m pip install --no-cache-dir -e /home/exo/exo && \
+    chown -R exo:exo /home/exo
 
 ENV EXO_HOME=/data \
     EXO_CACHE=/data/.cache/exo \
@@ -25,8 +24,7 @@ ENV EXO_HOME=/data \
 EXPOSE 52415
 
 USER root
-RUN ln -s /home/exo/.local/bin/exo /usr/local/bin/exo && \
-    mkdir -p /data && chown -R exo:exo /data && \
+RUN mkdir -p /data && chown -R exo:exo /data && \
     usermod -aG video exo
 USER exo
 
