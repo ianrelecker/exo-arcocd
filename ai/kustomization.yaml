@@ -5,3 +5,4 @@ resources:
   - namespace.yaml
   - exo-daemonset.yaml
   - exo-service.yaml
+  - ingress.yaml

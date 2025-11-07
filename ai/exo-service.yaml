@@ -6,8 +6,7 @@ metadata:
   labels:
     app: exo
 spec:
-  type: LoadBalancer
-  externalTrafficPolicy: Cluster
+  type: ClusterIP
   selector:
     app: exo
   ports:

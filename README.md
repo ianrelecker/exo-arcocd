@@ -1,6 +1,6 @@
 # exo on Kubernetes
 
-Kubernetes and Argo CD manifests for running [`exo`](https://github.com/exo-explore/exo) across your cluster. The default `ai/` Kustomize package deploys an `exo` DaemonSet (one pod per node) together with a `LoadBalancer` service that exposes the built-in web UI and ChatGPT-compatible API on port `52415`.
+Kubernetes and Argo CD manifests for running [`exo`](https://github.com/exo-explore/exo) across your cluster. The default `ai/` Kustomize package deploys an `exo` DaemonSet (one pod per node), exposes it via a ClusterIP service, and includes an optional Ingress for HTTP access to port `52415`.
 
 ## Repository layout
 
@@ -74,10 +74,11 @@ To target a different overlay, copy the file and change `spec.source.path` accor
 
 ```bash
 kubectl -n exo get ds exo -w        # or get deploy exo for the demo overlay
-kubectl -n exo get svc exo -o wide  # watch for the LoadBalancer address
+kubectl -n exo get svc exo          # ClusterIP service that fronts every pod
+kubectl -n exo get ingress exo      # host/endpoint exposed by your ingress controller
 ```
 
-Once the service has an external IP or hostname, open `http://<lb-address>:52415` for the `exo` web UI. The Chat Completions API is served at `/v1/chat/completions` on the same endpoint.
+Once your ingress controller announces the host (default `exo.local`, adjust as needed), open `http://<host>:52415` for the `exo` web UI. The Chat Completions API is served at `/v1/chat/completions` on the same endpoint.
 
 ## Notes & customization tips
 
