@@ -83,6 +83,7 @@ Once your ingress controller announces the host (default `exo.local`, adjust as 
 ## Notes & customization tips
 
 - The DaemonSet mounts `/var/lib/exo-data` and `/var/lib/exo-cache` from each node. Adjust or swap to PVCs if you prefer shared storage.
+- Pods run with `hostNetwork: true` so UDP discovery and TCP traffic originate from the node's real interface. Make sure port `52415/udp+tcp` is free on every node and permitted through any host firewall so laptops or other non-Kubernetes devices can auto-discover the cluster.
 - GPU overlay assumes the NVIDIA device plugin is installed. Tweak resource requests/limits in `ai-gpu/gpu-patch.yaml` for your hardware.
 - The Tailscale sidecar requires `NET_ADMIN` and `/dev/net/tun`; ensure your cluster policy allows it.
 - Modify `app-exo.yaml` to change namespaces, projects, or sync settings to match your Argo CD conventions.
