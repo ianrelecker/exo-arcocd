@@ -70,7 +70,7 @@ kubectl apply -n argocd -f app-exo.yaml
 
 To target a different overlay, copy the file and change `spec.source.path` accordingly (e.g., `ai-gpu`). Automated sync, prune, and self-heal are already enabled.
 
-These manifests run on bare-metal/hostNetwork clusters where the ingress controller typically does not publish a load balancer address. To keep Argo CD from reporting the `Ingress` resource as perpetually `Progressing`, the manifest includes an inline health-check annotation that marks it `Healthy` once synced. Remove the annotation if your environment does advertise an address and you prefer the default behavior.
+These manifests run on bare-metal/hostNetwork clusters where the ingress controller typically does not publish a load balancer address. To keep Argo CD from reporting the `Ingress` resource as perpetually `Progressing`, the Ingress manifest sets `argocd.argoproj.io/sync-options: SkipAwait`, telling Argo CD not to wait for load balancer status. Remove the annotation if your environment does advertise an address and you prefer the default behavior.
 
 ## Verifying the deployment
 
