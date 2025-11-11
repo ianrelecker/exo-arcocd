@@ -5,6 +5,22 @@ metadata:
   namespace: exo
   annotations:
     kubernetes.io/ingress.class: nginx
+    # Argo CD treats Ingress resources without load balancer addresses as Progressing;
+    # this custom health check marks the resource healthy on bare-metal/hostNetwork clusters.
+    argocd.argoproj.io/health-check: |
+      hs = {}
+      local lb = nil
+      if obj.status ~= nil and obj.status.loadBalancer ~= nil then
+        lb = obj.status.loadBalancer.ingress
+      end
+      if lb ~= nil and #lb > 0 then
+        hs.status = "Healthy"
+        hs.message = "Load balancer address assigned"
+        return hs
+      end
+      hs.status = "Healthy"
+      hs.message = "Ingress controller does not publish load balancer addresses in this cluster."
+      return hs
 spec:
   rules:
     - host: exo.local
