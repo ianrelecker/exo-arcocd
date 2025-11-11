@@ -13,9 +13,18 @@ metadata:
       if obj.status ~= nil and obj.status.loadBalancer ~= nil then
         lb = obj.status.loadBalancer.ingress
       end
-      if lb ~= nil and #lb > 0 then
+      if type(lb) == "table" then
+        for _, entry in ipairs(lb) do
+          if entry ~= nil then
+            hs.status = "Healthy"
+            hs.message = "Load balancer address assigned"
+            return hs
+          end
+        end
+      elseif lb ~= nil then
+        -- Handle cjson.null (userdata) or other non-table placeholders without erroring.
         hs.status = "Healthy"
-        hs.message = "Load balancer address assigned"
+        hs.message = "Load balancer address placeholder detected"
         return hs
       end
       hs.status = "Healthy"

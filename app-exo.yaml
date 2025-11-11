@@ -1,14 +1,20 @@
-project: default
-source:
-  repoURL: 'https://github.com/ianrelecker/exo-arcocd.git'
-  path: ai
-  targetRevision: main
-destination:
-  server: 'https://kubernetes.default.svc'
-  namespace: exo
-syncPolicy:
-  automated:
-    prune: true
-    selfHeal: true
-  syncOptions:
-    - CreateNamespace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: exo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/ianrelecker/exo-arcocd.git'
+    path: ai
+    targetRevision: main
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: exo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
